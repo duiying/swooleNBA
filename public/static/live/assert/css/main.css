@@ -1,0 +1,47 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC","Helvetica Neue",STHeiti,"Microsoft Yahei",Tahoma,Simsun,sans-serif;
+	display: flex;
+	flex-direction: column;
+}
+.fr {
+	float: right;
+}
+.fl {
+	float: left;
+}
+.hidden {
+	display: none;
+}
+/* header content 采用该形式是为了header固定在顶部*/
+.header {
+	font-size: 1.2rem;
+	color: #292929;
+    height: 40px;
+    line-height: 40px;
+	text-align: center;
+	border: 1px solid #ddd;
+}
+.content {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	overflow-y: scroll;
+}
+.my {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 50px;
+	text-align: center;
+	font-size: 1.2rem!important;
+	color: #292929;
+}
+.back {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 50px;
+	text-align: center;
+	font-size: 1.2rem!important;
+}
+
