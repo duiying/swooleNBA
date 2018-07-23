@@ -1,15 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: baidu
- * Date: 18/3/27
- * Time: 上午12:50
+ * User: wyx
+ * Desc: HTTP服务 & websocket服务
  */
 class Ws {
-    CONST HOST = "0.0.0.0";
-    CONST PORT = 8811;
-    CONST CHART_PORT = 8812;
-    CONST GAME_PORT = 8813;
+    CONST HOST        = "0.0.0.0";      // 0.0.0.0表示监听所有地址
+    CONST PORT        = 8811;           // 监听端口 8811作为HTTP服务端口
+    CONST CHART_PORT  = 8812;           // 监听端口 8812作为websocket(聊天室)服务端口
+    CONST GAME_PORT   = 8813;           // 监听端口 8813作为websocket(赛况)服务端口
 
     public $ws = null;
     public function __construct() {
@@ -19,13 +17,14 @@ class Ws {
 
         $this->ws->set(
             [
-                'enable_static_handler' => true,
-                'document_root' => "/home/work/htdocs/swooleNBA/public/static",
-                'worker_num' => 4,
-                'task_worker_num' => 4,
+                'enable_static_handler' => true,                                          // 使document_root配置生效
+                'document_root'         => "/home/work/htdocs/swooleNBA/public/static",   // 配置静态文件根目录
+                'worker_num'            => 4,                                             // 设置worker进程数量
+                'task_worker_num'       => 4,                                             // 设置Task进程数量
             ]
         );
 
+        // 事件回调函数
         $this->ws->on("start", [$this, 'onStart']);
         $this->ws->on("open", [$this, 'onOpen']);
         $this->ws->on("message", [$this, 'onMessage']);
@@ -35,24 +34,17 @@ class Ws {
         $this->ws->on("finish", [$this, 'onFinish']);
         $this->ws->on("close", [$this, 'onClose']);
 
+        // 启动Server
         $this->ws->start();
     }
 
-    /**
-   * onStart
-   *平滑重启设置别名
-   */
+    // Server启动在主进程的主线程回调此函数
     public function onStart($server) {
-        // onStart调用时修改为主进程名称,方便重启脚本能够找到对应的pid
+        // onStart调用时修改主进程名称,方便重启脚本能够找到对应的pid
         swoole_set_process_name("live_master");
     }
 
-    /**
-     * 事件回调函数
-     * 此事件在Worker进程/Task进程启动时发生
-     * @param $server
-     * @param $worker_id
-     */
+    // Worker进程/Task进程启动时发生
     public function onWorkerStart($server,  $worker_id) {
         // 定义应用目录
         define('APP_PATH', __DIR__ . '/../../../application/');
@@ -68,16 +60,12 @@ class Ws {
         }
     }
 
-    /**
-     * request回调
-     * @param $request
-     * @param $response
-     */
+    // swoole_websocket_server 继承自 swoole_http_server
+    // 设置了onRequest回调,websocket服务器也可以同时作为http服务器
     public function onRequest($request, $response) {
 
          //在这里设置图标默认状态码为404，为了让其请求不写入日志中
-          if($request->server['query_string'] == 's=/favicon.ico')
-          {
+          if ($request->server['query_string'] == 's=/favicon.ico') {
             $response->status(404);
             //结束响应
             $response->end();
@@ -119,9 +107,10 @@ class Ws {
         // 记录日志
         $this->writeLog();
 
+        // 传递ws对象
         $_POST['http_server'] = $this->ws;
 
-
+        // 开启缓冲区
         ob_start();
         // 执行应用并响应
         try {
@@ -137,58 +126,25 @@ class Ws {
         $response->end($res);
     }
 
-    /**
-     * @param $serv
-     * @param $taskId
-     * @param $workerId
-     * @param $data
-     */
+    // 在task_worker进程内被调用
     public function onTask($serv, $taskId, $workerId, $data) {
-
-        // 分发 task 任务机制，让不同的任务 走不同的逻辑
         $obj = new app\common\lib\task\Task;
-
         $method = $data['method'];
+        // 分发task,让不同task走不同方法
         $flag = $obj->$method($data['data'], $serv);
-        /*$obj = new app\common\lib\ali\Sms();
-        try {
-            $response = $obj::sendSms($data['phone'], $data['code']);
-        }catch (\Exception $e) {
-            // todo
-            echo $e->getMessage();
-        }*/
-
-        return $flag; // 告诉worker
+        // 返回执行结果到worker进程,worker进程中会触发onFinish函数,表示投递的task已完成
+        return $flag; 
     }
 
-    /**
-     * @param $serv
-     * @param $taskId
-     * @param $data
-     */
+    // 当worker进程投递的任务在task_worker中完成时,task进程会通过swoole_server->finish()方法将任务处理的结果发送给worker进程
     public function onFinish($serv, $taskId, $data) {
         echo "taskId:{$taskId}\n";
         echo "finish-data-sucess:{$data}\n";
     }
 
-    /**
-     * 监听ws连接事件
-     * @param $ws
-     * @param $request
-     */
+    // 当WebSocket客户端与服务器建立连接并完成握手后会回调此函数
     public function onOpen($ws, $request) {
-        // fd redis [1]
-        // 这里需要作一下区分,,8811端口的记录在redis,8812的不要
-        /*foreach($_POST['http_server']->ports[1]->connections as $fd) {
-            echo $fd.'------------'.PHP_EOL;
-        }*/
-        /*foreach ($this->ws->ports[2]->connections as $fd) {
-          echo $fd.'------------'.PHP_EOL;
-        }
-
-        foreach ($this->ws->ports[1]->connections as $fd) {
-          echo $fd.'------------'.PHP_EOL;
-        }*/
+        // 将8813端口的客户端websocket连接ID保存到redis
         $set = \app\common\lib\redis\Predis::getInstance()->sMembers(config("redis.live_user"));
         if (empty($set)) {
           foreach ($this->ws->ports[2]->connections as $fd) {
@@ -202,26 +158,18 @@ class Ws {
             }
           }
         }
-
-        var_dump($request->fd);
     }
 
-    /**
-     * 监听ws消息事件
-     * @param $ws
-     * @param $frame
-     */
+    // onMessage 当服务器收到来自客户端的数据帧时会回调此函数
     public function onMessage($ws, $frame) {
         echo "ser-push-message:{$frame->data}\n";
+        // 向websocket客户端连接推送数据
         $ws->push($frame->fd, "server-push:".date("Y-m-d H:i:s"));
     }
 
-    /**
-     * close
-     * @param $ws
-     * @param $fd
-     */
+    // TCP客户端连接关闭后,在worker进程中回调此函数
     public function onClose($ws, $fd) {
+      // 从redis中删除8813端口的客户端websocket断开连接ID
       $set = \app\common\lib\redis\Predis::getInstance()->sMembers(config("redis.live_user"));
       if (in_array($fd, $set)) {
         \app\common\lib\redis\Predis::getInstance()->sRem(config('redis.live_user'), $fd);
@@ -231,29 +179,22 @@ class Ws {
 
     // 记录日志
     public function writeLog() {
-        //封装数组
-    $datas = array_merge($_POST,$_GET,$_SERVER);
-    $log = date("Ymd H:i:s")." ";
-    //连成字符存
-    foreach ($datas as $key => $value) {
-      $log.= $key.":".$value."  ";
-      
-    }
-    //使用异步写文件
-    $f=swoole_async_writeFile(APP_PATH.'../runtime/log/'.date('Ym').'/'.date('d').'_accessinfo.log', $log.PHP_EOL, function($filename) {
-    //todo
+      //封装数组
+      $datas = array_merge($_POST,$_GET,$_SERVER);
+      $log = date("Ymd H:i:s")." ";
+      //连成字符存
+      foreach ($datas as $key => $value) {
+        $log.= $key.":".$value."  ";
+      }
+      //使用异步写文件
+      $f=swoole_async_writeFile(APP_PATH.'../runtime/log/'.date('Ym').'/'.date('d').'_accessinfo.log', $log.PHP_EOL, function($filename) {
+      //todo
    
-}, FILE_APPEND);
-    //echo $f.PHP_EOL.$log;
+      }, FILE_APPEND);
     }
-
     
 }
 
-
-
+// 实例化
 new Ws();
 
-// 20台机器    agent -> spark (计算) - 》 数据库   elasticsearch  hadoop
-
-// sigterm sigusr1 usr2 信号源
