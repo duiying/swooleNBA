@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Sinwa图片直播 - 登录</title>
+	<title>图片直播 - 登录</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta content="yes" name="apple-mobile-web-app-capable" />
 	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -76,7 +76,7 @@
 		登录
 	</header>
 	<form class="login" id="form">
-		<h2>singwa体育赛事图文直播平台</h2>
+		<h2>wyx体育赛事图文直播平台</h2>
 		<div class="login-item">
 			<input type="text" placeholder="手机号" class="phone-num" name="phone_num"/>
 			<button type="button" id="authCodeBtn">验证码</button>
@@ -96,15 +96,8 @@
 			    var phone_num = $(" input[ name='phone_num' ] ").val();
 				url = "http://193.112.38.71/index/send/index/&phone_num="+phone_num;
 				$(this).html('已发送').attr('disabled', true);
-				// $.post()
 				$.get(url, function (data) {
-					// TODO: 将下面3行代码删除
-					/*if (data.status == 'ok') {
-						alert('发送完成');
-					}*/
-					// if (result.status != 'ok') {
-					// 	alert('网络错误');
-					// }
+					alert(data.message);
 				}, 'json');
 			});
 
@@ -112,15 +105,11 @@
 			$submitBtn.click(function (event) {
 				event.preventDefault();
 				var formData = $('form').serialize();
-				// TODO: 请求后台接口跳转界面，前端跳转或者后台跳
-				/*$.get("http://193.112.38.71:8811?s=index/login/index&"+formData, function (data) {
-					// console.log("https://www.easy-mock.com/mock/5ab1188bddac7967e4398146/example/query?" + formData);
-					// location.href='index.html';
-				}, 'json');*/
 				$.post("http://193.112.38.71/index/login/index", formData, function(data){
 	              if (data.status == 1) {
 	                alert(data.message);
 	                // 登录成功
+	                location.reload();
 	              }
             	}, 'json');
 			});
