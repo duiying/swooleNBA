@@ -1,15 +1,33 @@
 # SwooleNBA
-ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能
+ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能  
+
+### 开发环境(软件安装包在swooleNBA/mydownloadpackage目录)
+swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以参考我的环境搭建过程(我的搭建过程也是通过踩坑自己总结的)  
+但是还是建议自己走一遍流程,因为在搭建环境的过程中踩坑,通过参考error信息以及查阅文档等方式填坑是一个工程师必备的技能
+* Centos7.3
+* PHP7.2.2
+* swoole-4.0.2
+* redis-4.0.2
+* thinkphp_5.1.0_rc
+* nginx-1.14.0
+### 功能特性
+很多业务场景是需要数据库操作的,如果有需要请自行完成数据库操作方面的编码工作
+* nginx作为代理服务器处理静态文件请求以及将非静态文件请求转发到swoole的HTTP服务器
+* 异步发送阿里云短信平台验证码来实现登录场景
+* 将客户端用户在线连接ID保存到redis,利用swoole websocket和异步任务task机制处理赛事图文直播
+* swoole server connections获取在线用户连接,并利用websocket向客户端连接推送聊天数据
+* 异步写日志记录用户请求日志
+* 利用shell脚本实时监控系统
+* 平滑重启shell脚本
 ### 效果图
 ##### 登录页面(访问地址: http://yourIP/live/login.html)
 ![登录](https://github.com/duiying/swooleNBA/blob/master/readmeimg/login.png)
 ##### 主持人页面(访问地址: http://yourIP/admin/live.html)
 ![主持人](https://github.com/duiying/swooleNBA/blob/master/readmeimg/master.png)
-##### 赛况页面(访问地址: http://193.112.38.71/live/detail.html)
+##### 赛况页面(访问地址: http://yourIP/live/detail.html)
 ![赛况](https://github.com/duiying/swooleNBA/blob/master/readmeimg/game.png)
-##### 聊天室页面(访问地址: http://193.112.38.71/live/detail.html)
+##### 聊天室页面(访问地址: http://yourIP/live/detail.html)
 ![聊天室](https://github.com/duiying/swooleNBA/blob/master/readmeimg/chart.png)
-
 ### 环境安装
 ```
 * 首先安装必要的工具以及依赖
@@ -147,7 +165,6 @@ ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能
     * 重载
         service nginx reload
 ```
-
 ### Nginx配置
 ```
 * 进入目录
@@ -222,11 +239,6 @@ ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能
                 'TemplateCode'              => '模板CODE'         
             ];
 ```
-
-
-
-
-
 ### 可能用到的linux命令
 ```
 * 启动一个进程时提示端口已被占用
@@ -236,9 +248,10 @@ ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能
     2.kill 进程id(即pid)
         比如 kill 21656
 ```
-
-### todo
+### 需要完善的地方
 ```
-* 聊天室采用真正的登录用户聊天
-* 用websocket完善
+* 聊天室采用真正的登录用户,如果未登录不允许发送聊天信息
+* 用websocket完善赛程部分(访问地址: http://yourIP/live/index.html)以及数据统计部分(访问地址: http://yourIP/live/detail.html)(原理同赛况部分相同)
+* 主持人模块可以写一个后台管理系统,发布直播等功能都在管理系统中进行操作
+* 各种业务场景下的数据库操作
 ```
