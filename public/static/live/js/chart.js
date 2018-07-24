@@ -10,7 +10,7 @@ var wsUrl = "ws://193.112.38.71:8812";
 
     // 实例化 onmessage
     websocket.onmessage = function(evt) {
-      push11(evt.data);
+      pushChart(evt.data);
       console.log("ws-server-return-data22:" + evt.data);
     }
 
@@ -24,7 +24,7 @@ var wsUrl = "ws://193.112.38.71:8812";
       console.log("error:" + evt.data);
     }
 
-    function push11(data) {
+    function pushChart(data) {
       data = JSON.parse(data);
       var html='<div class="comment">';
       html+='<span>'+data.user+' </span>';
