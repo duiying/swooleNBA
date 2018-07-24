@@ -238,6 +238,13 @@ swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以�
                 'SignName'                  => '签名名称',      
                 'TemplateCode'              => '模板CODE'         
             ];
+* 将工程中以下文件中的IP地址193.112.38.71改为你的IP地址
+    * swooleNBA\config\live.php
+    * swooleNBA\public\static\admin\live.html
+    * swooleNBA\public\static\live\js\chart-push.js
+    * swooleNBA\public\static\live\js\chart.js
+    * swooleNBA\public\static\live\js\live.js
+    * swooleNBA\public\static\live\login.html
 ```
 ### 可能用到的linux命令
 ```
