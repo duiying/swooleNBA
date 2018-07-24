@@ -19,6 +19,8 @@ swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以�
 * 异步写日志记录用户请求日志
 * 利用shell脚本实时监控系统
 * 平滑重启shell脚本
+### 原理图
+![原理图](https://github.com/duiying/swooleNBA/blob/master/readmeimg/yuanli.png)
 ### 效果图
 ##### 登录页面(访问地址: http://yourIP/live/login.html)
 ![登录](https://github.com/duiying/swooleNBA/blob/master/readmeimg/login.png)
@@ -175,7 +177,7 @@ swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以�
 * 编辑swoole.conf文件,内容如下
     [root@VM_12_22_centos conf.d]# cat swoole.conf 
     server
-        {
+    {
             listen 80;
             #listen [::]:80;
 
@@ -188,6 +190,31 @@ swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以�
                 if (!-e $request_filename) {
                      rewrite ^(.*)$ /index.php?s=$1;
                      proxy_pass http://127.0.0.1:8811;
+                     break;
+                }
+            }
+    }
+* 如果想做负载均衡,编辑swoole.conf文件,内容如下
+[root@VM_12_22_centos conf.d]# cat swoole.conf 
+    upstream swoole_host
+    {
+        server ip1 weight=1;
+        server ip2 weight=2;
+    }
+    server
+    {
+            listen 80;
+            #listen [::]:80;
+
+            location / {
+                root   /home/work/htdocs/swooleNBA/public/static;
+                index  index.html index.htm;
+                if ($uri = /) {
+                    proxy_pass http://swoole_host;
+                }
+                if (!-e $request_filename) {
+                     rewrite ^(.*)$ /index.php?s=$1;
+                     proxy_pass http://swoole_host;
                      break;
                 }
             }
