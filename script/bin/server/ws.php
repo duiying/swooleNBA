@@ -65,13 +65,12 @@ class Ws {
     public function onRequest($request, $response) {
 
          //在这里设置图标默认状态码为404，为了让其请求不写入日志中
-          if ($request->server['query_string'] == 's=/favicon.ico') {
+        if (isset($request->server['query_string']) && $request->server['query_string'] == 's=/favicon.ico') {
             $response->status(404);
             //结束响应
             $response->end();
             return;
-          }
-
+        }
 
         $_SERVER  =  [];
         if(isset($request->server)) {
