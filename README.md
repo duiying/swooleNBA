@@ -1,9 +1,14 @@
 # SwooleNBA
 ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能
 ### 效果图
-![效果图](https://github.com/duiying/swooleNBA/blob/master/readmeimg/xiaoguotu.png)
-##### 聊天室页面(访问地址: http://yourIP/live/detail.html)
-![登录](https://github.com/duiying/swooleNBA/blob/master/readmeimg/chart.png)
+##### 登录页面(访问地址: http://yourIP/live/login.html)
+![登录](https://github.com/duiying/swooleNBA/blob/master/readmeimg/login.png)
+##### 主持人页面(访问地址: http://yourIP/admin/live.html)
+![主持人](https://github.com/duiying/swooleNBA/blob/master/readmeimg/master.png)
+##### 赛况页面(访问地址: http://193.112.38.71/live/detail.html)
+![赛况](https://github.com/duiying/swooleNBA/blob/master/readmeimg/game.png)
+##### 聊天室页面(访问地址: http://193.112.38.71/live/detail.html)
+![聊天室](https://github.com/duiying/swooleNBA/blob/master/readmeimg/chart.png)
 
 ### 环境安装
 ```
