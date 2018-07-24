@@ -107,9 +107,11 @@
 				var formData = $('form').serialize();
 				$.post("http://193.112.38.71/index/login/index", formData, function(data){
 	              if (data.status == 1) {
-	                alert(data.message);
+	                alert('登录成功');
 	                // 登录成功
 	                location.reload();
+	              } else {
+	              	alert('登录失败');
 	              }
             	}, 'json');
 			});
