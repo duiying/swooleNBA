@@ -3,6 +3,8 @@ ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能
 ### 效果图
 ##### 登录页面(访问地址: http://yourIP/admin/live.html)
 ![登录](https://github.com/duiying/swooleNBA/blob/master/readmeimg/login.png)
+##### 聊天室页面(访问地址: http://yourIP/live/detail.html)
+![聊天室](https://github.com/duiying/swooleNBA/blob/master/readmeimg/chart.png)
 
 ### 环境安装
 ```
