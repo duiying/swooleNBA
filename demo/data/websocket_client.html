@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<h1>websocket客户端<h1>
+  <script>
+    var wsUrl = "ws://193.112.38.71:8812";
+
+    var websocket = new WebSocket(wsUrl);
+
+    // onopen
+    websocket.onopen = function(evt) {
+      websocket.send("mydata");
+      console.log("connected-success");
+    }
+
+    // onmessage
+    websocket.onmessage = function(evt) {
+      console.log("websocket-server-return-data:" + evt.data);
+    }
+
+    // onclose
+    websocket.onclose = function(evt) {
+      console.log("close");
+    }
+
+    // onerror
+    websocket.onerror = function(evt, e) {
+      console.log("error:" + evt.data);
+    }
+
+  </script>
+</body>
+</html>
