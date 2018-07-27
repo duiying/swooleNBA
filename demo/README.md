@@ -6,7 +6,7 @@
     * 进入目录
     	cd /usr/src/
     * 下载MySQL源
-		wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+        wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
     * 安装MySQL源
     	rpm -ivh mysql57-community-release-el7-7.noarch.rpm
     * 安装mysql-community-server
