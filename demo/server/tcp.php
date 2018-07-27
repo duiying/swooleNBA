@@ -11,7 +11,7 @@ $serv->set([
 // 事件回调函数,有新的连接进入时,在worker进程中回调
 // $serv => Swoole\Server对象 $fd => 连接的文件描述符 $reactor_id => 来自哪个Refactor线程
 $serv->on('connect', function ($serv, $fd, $reactor_id) {
-    echo "ClientConnect: {$reactor_id} - {$fd} - Connect.\n";
+    echo "ClientConnect: {$reactor_id} - {$fd} - Connect\n";
 });
 
 // 事件回调函数,接收到数据时回调此函数,在worker进程中回调
