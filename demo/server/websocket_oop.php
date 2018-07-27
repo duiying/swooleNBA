@@ -15,10 +15,12 @@ class Ws {
 
         $this->ws->set(
             [
-                'worker_num' => 2,
-                'task_worker_num' => 2,
+                'worker_num'        => 2,               // 设置worker进程数量
+                'task_worker_num'   => 2,               // 设置Task进程数量
             ]
         );
+
+        // 事件回调函数
         $this->ws->on("open", [$this, 'onOpen']);
         $this->ws->on("message", [$this, 'onMessage']);
         $this->ws->on("task", [$this, 'onTask']);
@@ -28,56 +30,43 @@ class Ws {
         $this->ws->start();
     }
 
-    /**
-     * 监听ws连接事件
-     * @param $ws
-     * @param $request
-     */
+    // 当WebSocket客户端与服务器建立连接并完成握手后会回调此函数
     public function onOpen($ws, $request) {
         var_dump($request->fd);
 
         // 异步毫秒定时器
-        if($request->fd == 1) {
-            // 每2秒执行
+        if ($request->fd == 1) {
+            // 每2秒执行一次
             swoole_timer_tick(2000, function($timer_id){
                 echo "2s: timerId:{$timer_id}\n";
             });
         }
     }
 
-    /**
-     * 监听ws消息事件
-     * @param $ws
-     * @param $frame
-     */
+    // onMessage 当服务器收到来自客户端的数据帧时会回调此函数
     public function onMessage($ws, $frame) {
-        echo "ser-push-message:{$frame->data}\n";
+        echo "server-push-message:{$frame->data}\n";
 
         // 异步task开始
-        // 假如说需要时间 10s
+        // 需要时间 10s
         $data = [
             'task' => 1,
             'fd' => $frame->fd,
         ];
-        // $ws->task($data);
+        $ws->task($data);
         // 异步task结束
 
-        // 异步毫秒定时器 use使用的是php递包
-        swoole_timer_after(5000, function() use($ws, $frame) {
+        // 异步毫秒定时器 use的作用是连接闭包(匿名函数)和外界变量
+        swoole_timer_after(5000, function() use ($ws, $frame) {
             echo "5s-after\n";
-            $ws->push($frame->fd, "server-time-after:");
+            $ws->push($frame->fd, "server-time-after");
         });
 
-        // 这里的执行不会等待10s的任务结束之后才会执行,而是会立即执行
+        // 这里的执行不会等待异步task耗时10s的任务结束之后才会执行,而是会立即执行
         $ws->push($frame->fd, "server-push:".date("Y-m-d H:i:s"));
     }
 
-    /**
-     * @param $serv
-     * @param $taskId
-     * @param $workerId
-     * @param $data
-     */
+    // 在task_worker进程内被调用
     public function onTask($serv, $taskId, $workerId, $data) {
         print_r($data);
         // 耗时场景 10s
@@ -85,24 +74,17 @@ class Ws {
         return "on task finish"; // 告诉worker
     }
 
-    /**
-     * @param $serv
-     * @param $taskId
-     * @param $data onTask()中return的内容
-     */
+    // 当worker进程投递的任务在task_worker中完成时,task进程会通过swoole_server->finish()方法将任务处理的结果发送给worker进程
     public function onFinish($serv, $taskId, $data) {
         echo "taskId:{$taskId}\n";
-        echo "finish-data-sucess:{$data}\n";
+        echo "finish-data-success:{$data}\n";
     }
 
-    /**
-     * close
-     * @param $ws
-     * @param $fd
-     */
+    // TCP客户端连接关闭后,在worker进程中回调此函数
     public function onClose($ws, $fd) {
-        echo "clientid:{$fd}\n";
+        echo "close-clientid:{$fd}\n";
     }
 }
 
+// 实例化
 $obj = new Ws();
