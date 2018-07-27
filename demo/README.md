@@ -27,3 +27,6 @@ TCP/UDP/HTTP/websocket通信引擎
 ### HTTP例程
 #### 服务端 demo/server/http.php
 ![UDP](https://github.com/duiying/swooleNBA/blob/master/demo/readmeimg/http.png)
+### websocket例程
+### 服务端 demo/server/websocket.php 客户端 demo/data/websocket_client.html
+![websocket](https://github.com/duiying/swooleNBA/blob/master/demo/readmeimg/websocket.png)
