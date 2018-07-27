@@ -21,8 +21,8 @@
     	set password = password('WYX*wyx123');
     * 开放远程连接
     	use mysql;
-		update user set host = '%' where host = 'localhost' and user = 'root';
-		flush privileges;
+        update user set host = '%' where host = 'localhost' and user = 'root';
+        flush privileges;
     * 创建名称为swoole的数据库,并执行下面sql语句
     	DROP TABLE IF EXISTS `test`;
         CREATE TABLE `test` (
