@@ -1,19 +1,20 @@
 <?php
-// 创建udp socket
+// 连接 swoole tcp 服务
 $client = new swoole_client(SWOOLE_SOCK_UDP);
 
-if(!$client->connect("127.0.0.1", 9502)) {
-    echo "连接失败";
+if (!$client->connect("127.0.0.1", 9502)) {
+    echo "connect failed";
     exit;
 }
 
-/// php cli常量
-fwrite(STDOUT, "请输入消息:");
+// STDOUT/STDIN => php cli常量
+fwrite(STDOUT, "input data:");
 $msg = trim(fgets(STDIN));
 
-// 发送消息给 udp server服务器
+// 发送数据到远程服务器
 $client->send($msg);
 
-// 接受来自server 的数据
+// 从服务器端接受数据
 $result = $client->recv();
+
 echo $result;
