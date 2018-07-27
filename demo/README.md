@@ -30,3 +30,6 @@ TCP/UDP/HTTP/websocket通信引擎
 ### websocket例程
 ### 服务端 demo/server/websocket.php 客户端 demo/data/websocket_client.html
 ![websocket](https://github.com/duiying/swooleNBA/blob/master/demo/readmeimg/websocket.png)
+### websocket面向对象&task机制 例程
+### 服务端 demo/server/websocket_oop.php 客户端 demo/data/websocket_client.html
+![websocket](https://github.com/duiying/swooleNBA/blob/master/demo/readmeimg/websocket_oop.png)
