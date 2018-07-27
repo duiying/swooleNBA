@@ -13,5 +13,6 @@ swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以�
 ### 网络通信引擎
 TCP/UDP/HTTP/websocket通信引擎
 #### TCP
-![TCP](https://github.com/duiying/swooleNBA/blob/master/readmeimg/yuanli.png)
+demo/server/tcp.php
+![TCP](https://github.com/duiying/swooleNBA/blob/master/demo/readmeimg/tcp.png)
 
