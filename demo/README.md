@@ -4,27 +4,27 @@
 ```
 * 安装MySQL
     * 进入目录
-    	cd /usr/src/
+        cd /usr/src/
     * 下载MySQL源
         wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
     * 安装MySQL源
-    	rpm -ivh mysql57-community-release-el7-7.noarch.rpm
+        rpm -ivh mysql57-community-release-el7-7.noarch.rpm
     * 安装mysql-community-server
-    	yum -y install mysql-community-server
+        yum -y install mysql-community-server
     * 启动MySQL服务
-    	service mysqld start
+        service mysqld start
     * 查看root密码
-    	cat /var/log/mysqld.log | grep password
+        cat /var/log/mysqld.log | grep password
     * 用查出的密码登录
-    	mysql -u root -p
+        mysql -u root -p
     * 修改密码
-    	set password = password('WYX*wyx123');
+        set password = password('WYX*wyx123');
     * 开放远程连接
-    	use mysql;
+        use mysql;
         update user set host = '%' where host = 'localhost' and user = 'root';
         flush privileges;
     * 创建名称为swoole的数据库,并执行下面sql语句
-    	DROP TABLE IF EXISTS `test`;
+        DROP TABLE IF EXISTS `test`;
         CREATE TABLE `test` (
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `username` varchar(100) NOT NULL,
@@ -88,4 +88,113 @@ start
 success
 [root@VM_12_22_centos io]# cat 1.log 
 20180727 12:38:56
+```
+### 异步MySQL
+```
+[root@VM_12_22_centos io]# pwd
+/home/work/htdocs/swooleNBA/demo/io
+[root@VM_12_22_centos io]# php mysql.php 
+bool(true)
+start
+mysql-connect
+int(1)
+```
+### 异步redis
+```
+[root@VM_12_22_centos swooleNBA]# cd -
+/home/work/htdocs/swooleNBA/demo/io
+[root@VM_12_22_centos io]# php redis.php 
+start
+connect
+bool(true)
+------------------------------
+string(2) "OK"
+------------------------------
+string(10) "1532749703"
+------------------------------
+array(2) {
+  [0]=>
+  string(16) "user_17725027209"
+  [1]=>
+  string(3) "wyx"
+}
+------------------------------
+array(1) {
+  [0]=>
+  string(3) "wyx"
+}
+------------------------------
+```
+### Process
+```
+[root@VM_12_22_centos process]# pwd
+/home/work/htdocs/swooleNBA/demo/process
+[root@VM_12_22_centos process]# php process.php 
+22856
+bool(true)
+start
+filename:/home/work/htdocs/swooleNBA/demo/io/1.txt
+content:filedata
+```
+### 开启N个子进程
+```
+[root@VM_12_22_centos process]# php curl.php 
+process-start-time: 20180728 04:50:33
+http://baidu.com?wd=test1 success
+
+http://baidu.com?wd=test2 success
+
+http://baidu.com?wd=test3 success
+
+http://baidu.com?wd=test4 success
+
+http://baidu.com?wd=test5 success
+
+http://baidu.com?wd=test6 success
+
+process-end-time:20180728 04:50:34
+```
+### Memory
+```
+[root@VM_12_22_centos memory]# pwd
+/home/work/htdocs/swooleNBA/demo/memory
+[root@VM_12_22_centos memory]# php table.php 
+Array
+(
+    [id] => 1
+    [name] => wyx
+    [age] => 30
+)
+Swoole\Table\Row Object
+(
+    [key] => wyx2
+    [value] => Array
+        (
+            [id] => 2
+            [name] => wyx2
+            [age] => 29
+        )
+
+)
+delete start:
+Swoole\Table\Row Object
+(
+    [key] => wyx2
+    [value] => Array
+        (
+        )
+
+)
+```
+### Coroutine
+```
+* 先设置一个key
+127.0.0.1:6379> get key
+"val"
+* 启动
+[root@VM_12_22_centos coroutine]# pwd
+/home/work/htdocs/swooleNBA/demo/coroutine
+[root@VM_12_22_centos coroutine]# php redis.php 
+* 浏览器访问http://yourIP:8001/?a=key
+* 浏览器输出val
 ```
