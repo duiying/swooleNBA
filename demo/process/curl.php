@@ -1,6 +1,6 @@
 <?php
 
-echo "process-start-time: ".date("Ymd H:i:s");
+echo "process-start-time: ".date("Ymd H:i:s").PHP_EOL;
 $workers    = [];
 $urls       = [
     'http://baidu.com?wd=test1',
