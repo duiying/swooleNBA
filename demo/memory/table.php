@@ -21,10 +21,12 @@ $table['wyx2'] = [
 // 获取一行数据
 print_r($table->get('wyx'));
 
+// 自减操作
 $table->decr('wyx2', 'age', 2);
 print_r($table['wyx2']);
 
 echo "delete start:".PHP_EOL;
+// 删除数据
 $table->del('wyx2');
 
 print_r($table['wyx2']);
