@@ -19,6 +19,8 @@ for($i = 0; $i < 6; $i++) {
         // 向管道内写入数据
         $worker->write($content.PHP_EOL);
     }, true);
+
+    // 创建成功返回子进程的PID
     $pid = $process->start();
     $workers[$pid] = $process;
 }
@@ -31,7 +33,7 @@ foreach($workers as $process) {
 // 模拟curl请求
 function curlData($url) {
     sleep(1);
-    return $url . "success".PHP_EOL;
+    return $url . " success".PHP_EOL;
 }
 
 echo "process-end-time:".date("Ymd H:i:s");
