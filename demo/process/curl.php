@@ -36,4 +36,4 @@ function curlData($url) {
     return $url . " success".PHP_EOL;
 }
 
-echo "process-end-time:".date("Ymd H:i:s");
+echo "process-end-time:".date("Ymd H:i:s").PHP_EOL;
