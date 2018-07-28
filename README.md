@@ -1,4 +1,5 @@
 # SwooleNBA
+参考慕课网上的一套教程所完成的项目  
 ThinkPHP5整合原生Swoole实现NBA比赛图文直播以及聊天室功能  
 
 ### 开发环境(软件安装包在swooleNBA/mydownloadpackage目录)
