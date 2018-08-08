@@ -20,6 +20,23 @@ swoole搭建环境过程难免会有一些坑,如果想快速上手swoole可以�
 * 异步写日志记录用户请求日志
 * 利用shell脚本实时监控系统
 * 平滑重启shell脚本
+### 如何实现平滑重启
+首先在server启动时,修改主进程名称为'live_master',代码如下
+```
+swoole_set_process_name("live_master");
+```
+reload.sh脚本内容如下
+```
+# 平滑重启脚本
+
+echo "loading...";
+# pidof命令用于查找指定名称的进程的进程id
+pid=`pidof live_master`;
+echo $pid;
+# 平滑重启所有worker进程 kill -USR1 主进程PID
+kill -USR1 $pid;
+echo "success restart";
+```
 ### 原理图
 ![原理图](https://github.com/duiying/swooleNBA/blob/master/readmeimg/yuanli.png)
 ### 效果图
