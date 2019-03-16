@@ -38,16 +38,16 @@ kill -USR1 $pid;
 echo "success restart";
 ```
 ### 原理图
-![原理图](https://github.com/duiying/swooleNBA/blob/master/readmeimg/yuanli.png)
+![原理图](https://raw.githubusercontent.com/duiying/img/master/swoole-yuanli.png)
 ### 效果图
 ##### 登录页面(访问地址: http://yourIP/live/login.html)
-![登录](https://github.com/duiying/swooleNBA/blob/master/readmeimg/login.png)
+![登录](https://raw.githubusercontent.com/duiying/img/master/swoole-login.png)
 ##### 主持人页面(访问地址: http://yourIP/admin/live.html)
-![主持人](https://github.com/duiying/swooleNBA/blob/master/readmeimg/master.png)
+![主持人](https://raw.githubusercontent.com/duiying/img/master/swoole-master.png)
 ##### 赛况页面(访问地址: http://yourIP/live/detail.html)
-![赛况](https://github.com/duiying/swooleNBA/blob/master/readmeimg/game.png)
+![赛况](https://raw.githubusercontent.com/duiying/img/master/swoole-game.png)
 ##### 聊天室页面(访问地址: http://yourIP/live/detail.html)
-![聊天室](https://github.com/duiying/swooleNBA/blob/master/readmeimg/chart.png)
+![聊天室](https://raw.githubusercontent.com/duiying/img/master/swoole-chart.png)
 ### 环境安装
 ```
 * 首先安装必要的工具以及依赖
